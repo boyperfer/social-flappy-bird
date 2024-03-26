@@ -35,7 +35,7 @@ bird_movement = 0
 game_active = True
 pipe_height = [200, 300, 400, 500, 600, 700, 800]
 SPAWNPIPE = pg.USEREVENT
-pg.time.set_timer(SPAWNPIPE, 2000)
+pg.time.set_timer(SPAWNPIPE, 2000) #frequency of pipes
 pipe_scroll_speed = 15
 score = 0
 
@@ -99,7 +99,7 @@ while cap.isOpened():
             sys.exit()
         if event.type == SPAWNPIPE:
             pipe_list.extend(create_pipe())
-        if event.type == pg.USEREVENT:  # 2. If time event occurs
+        if event.type == pg.USEREVENT and game_active:  # 2. If time event occurs
             score += 1  # Increase the score by 1
 
 
@@ -124,9 +124,25 @@ while cap.isOpened():
             bird_rect.centery = int(landmark.y * screen_height)
             bird_rect.centerx = int(landmark.x * screen_width)
     else:
-        pipe_list = reset_game()
-        game_active = True
-        bird_movement = 0
+        font = pg.font.Font(None, 100)
+        text_surface = font.render(f"Score: {score}", True, (255, 255, 255))
+        screen.blit(text_surface, (screen_width // 2 - text_surface.get_width() // 2, screen_height // 2 - text_surface.get_height() // 2))
+    
+        # Play Again button
+        play_again_button = pg.Rect(screen_width // 2 - 100, screen_height // 2 + 100, 200, 50)
+        pg.draw.rect(screen, (0, 255, 0), play_again_button)
+        font = pg.font.Font(None, 36)
+        play_again_text = font.render("Play Again", True, (255, 255, 255))
+        screen.blit(play_again_text, (screen_width // 2 - play_again_text.get_width() // 2, screen_height // 2 + 120))
+    
+        # Check if user clicks the Play Again button
+        mouse_pos = pg.mouse.get_pos()
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if play_again_button.collidepoint(mouse_pos):
+                # Reset game
+                game_active = True
+                score = 0
+                pipe_list = reset_game()
 
     font = pg.font.Font(None, 36)  # Font for rendering the score
     score_surface = font.render(f"Score: {score}", True, (255, 255, 255))  # 3. Render the score
