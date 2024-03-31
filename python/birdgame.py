@@ -1,87 +1,83 @@
-import cv2
+import cv2 
 import mediapipe as mp
 import pygame as pg
 import numpy as np
 import sys
 import random
-import asyncio
 
 # Initialize MediaPipe Pose
-mp_pose = mp.solutions.pose
-pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+def run_game():
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-# Initialize PyGame
-pg.init()
-screen_width, screen_height = 1920, 1080
-screen = pg.display.set_mode((screen_width, screen_height))
-pg.display.set_caption("Flappy Bird with Webcam Background")
+    # Initialize PyGame
+    screen_width, screen_height = 1920, 1080
+    pg.init()
+    screen = pg.display.set_mode((screen_width, screen_height))
+    pg.display.set_caption("Flappy Bird with Webcam Background")
 
-# Load bird and pipe images
-bird_image = pg.image.load('./assets/birdup.png').convert_alpha()
-bird_image = pg.transform.scale(bird_image, (100, 100))
-bird_rect = bird_image.get_rect(center=(100, 240))
+    # Load bird and pipe images
+    bird_image = pg.image.load('./assets/birdup.png').convert_alpha()
+    bird_image = pg.transform.scale(bird_image, (100, 100))
+    bird_rect = bird_image.get_rect(center=(100, 240))
 
-# Game variables
-gravity = 0.25
-bird_movement = 0
-game_active = True
-pipe_height = [200, 300, 400, 500, 600, 700, 800]
-SPAWNPIPE = pg.USEREVENT
-pg.time.set_timer(SPAWNPIPE, 2000)
-pipe_scroll_speed = 15
-score = 0
+    # Game variables
+    gravity = 0.25
+    bird_movement = 0
+    game_active = True
+    pipe_height = [200, 300, 400, 500, 600, 700, 800]
+    SPAWNPIPE = pg.USEREVENT
+    pg.time.set_timer(SPAWNPIPE, 2000)
+    pipe_scroll_speed = 15
+    score = 0
 
-# Initialize webcam
-cap = cv2.VideoCapture(0)
-pipe_image = pg.image.load('./assets/pipeup.png').convert_alpha()
-pipe_image = pg.transform.scale(pipe_image, (100, screen_height))
-pipe_list = []
+    # Initialize webcam
+    pipe_image = pg.image.load('./assets/pipeup.png').convert_alpha()
+    pipe_image = pg.transform.scale(pipe_image, (100, screen_height))
+    pipe_list = []
 
 
-# Function to create pipes
-def create_pipe():
-    random_pipe_pos = random.choice(pipe_height)
-    bottom_pipe = pipe_image.get_rect(midtop=(1700, random_pipe_pos))
-    top_pipe = pipe_image.get_rect(midbottom=(1700, random_pipe_pos - 300))  # 300 is the gap size
-    return bottom_pipe, top_pipe
+    # Function to create pipes
+    def create_pipe():
+        random_pipe_pos = random.choice(pipe_height)
+        bottom_pipe = pipe_image.get_rect(midtop=(1700, random_pipe_pos))
+        top_pipe = pipe_image.get_rect(midbottom=(1700, random_pipe_pos - 300))  # 300 is the gap size
+        return bottom_pipe, top_pipe
 
-# Function to move pipes
-def move_pipes(pipes):
-    for pipe in pipes:
-        pipe.centerx -= pipe_scroll_speed
-    visible_pipes = [pipe for pipe in pipes if pipe.right > -50]
-    return visible_pipes
+    # Function to move pipes
+    def move_pipes(pipes):
+        for pipe in pipes:
+            pipe.centerx -= pipe_scroll_speed
+        visible_pipes = [pipe for pipe in pipes if pipe.right > -50]
+        return visible_pipes
 
-# Function to draw pipes
-def draw_pipes(pipes):
-    for pipe in pipes:
-        if pipe.bottom >= screen_height:  # Bottom pipe
-            screen.blit(pipe_image, pipe)
-        else:  # Top pipe, needs to be flipped
-            flip_pipe = pg.transform.flip(pipe_image, False, True)
-            screen.blit(flip_pipe, pipe)
+    # Function to draw pipes
+    def draw_pipes(pipes):
+        for pipe in pipes:
+            if pipe.bottom >= screen_height:  # Bottom pipe
+                screen.blit(pipe_image, pipe)
+            else:  # Top pipe, needs to be flipped
+                flip_pipe = pg.transform.flip(pipe_image, False, True)
+                screen.blit(flip_pipe, pipe)
 
-# Function to check collision
-def check_collision(pipes):
-    global game_active
-    for pipe in pipes:
-        if bird_rect.colliderect(pipe):
-            game_active = False
-    if bird_rect.top <= -100 or bird_rect.bottom >= screen_height:
-        game_active = False
-
-# Function to reset the game
-def reset_game():
-    bird_rect.center = (100, 240)
-    return []
-
-# Webcam loop
-async def main():
-    while cap.isOpened():
+    # Function to check collision
+    def check_collision(pipes):
         global game_active
-        global pipe_list
-        global bird_movement
-        global score
+        for pipe in pipes:
+            if bird_rect.colliderect(pipe):
+                game_active = False
+        if bird_rect.top <= -100 or bird_rect.bottom >= screen_height:
+            game_active = False
+
+    # Function to reset the game
+    def reset_game():
+        bird_rect.center = (100, 240)
+        return []
+
+        # Webcam loop
+    screen = pg.display.set_mode((screen_width, screen_height))
+    cap = cv2.VideoCapture(0)
+    while cap.isOpened():
         # Inside the webcam loop
         ret, frame = cap.read()  # Read a frame from the camera
         if not ret:
@@ -179,6 +175,6 @@ async def main():
 
         pg.display.update()
         pg.time.Clock().tick(30)
-        await asyncio.sleep(0)
 
-asyncio.run(main())
+if __name__ == "__main__":
+    run_game()
