@@ -11,7 +11,7 @@ CORS(app)
 def start_game():
     birdgame.run_game()
 
-@app.route("/run", methods=['POST'])
+@app.route("/run/", methods=['POST', 'GET'])
 def game_run():
     thread = threading.Thread(target=start_game)
     thread.start()
