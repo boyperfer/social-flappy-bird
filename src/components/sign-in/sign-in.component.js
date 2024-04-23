@@ -1,80 +1,86 @@
-import React, {useState} from 'react';
-import {connect, useDispatch} from 'react-redux';
-import FormInput from '../form-input/form-input.component';
-import CustomButton from '../custom-button/custom-button.component';
+import React, { useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import FormInput from "../form-input/form-input.component";
+import CustomButton from "../custom-button/custom-button.component";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { emailSignInStart } from "../../redux/user/user.actions";
 import {
-	emailSignInStart,
-} from '../../redux/user/user.actions';
-import {
-	SignInContainer,
-	TitleContainer,
-	ButtonsContainer,
-} from './sign-in.styles';
+    SignInContainer,
+    TitleContainer,
+    ButtonsContainer,
+} from "./sign-in.styles";
 
 const defaultFormFields = {
-	email: '',
-	password: '',
+    email: "",
+    password: "",
 };
 
 const SignIn = () => {
-	const [userCredentials, setUserCredentials] = useState({
-		email: '',
-		password: '',
-	});
+    const [userCredentials, setUserCredentials] = useState({
+        email: "",
+        password: "",
+    });
+    const navigate = useNavigate();
 
-	const dispatch = useDispatch();
+    const currentUser = useSelector(selectCurrentUser);
+    if (currentUser) {
+        navigate("/");
+    }
 
-	const {email, password} = userCredentials;
+    const dispatch = useDispatch();
 
-	const resetFormFields = () => {
-		setUserCredentials(defaultFormFields);
-	};
+    const { email, password } = userCredentials;
 
-	const handleSubmit = async event => {
-		event.preventDefault();
+    const resetFormFields = () => {
+        setUserCredentials(defaultFormFields);
+    };
 
-		try {
-		  dispatch(emailSignInStart(email, password));
-		  resetFormFields();
-		} catch (error) {
-		  console.log('user sign in failed', error);
-		}
-	};
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-	const handleChange = event => {
-		const {name, value} = event.target;
-		setUserCredentials({...userCredentials, [name]: value});
-	};
+        try {
+            dispatch(emailSignInStart(email, password));
+            resetFormFields();
+        } catch (error) {
+            console.log("user sign in failed", error);
+        }
+    };
 
-	return (
-		<SignInContainer>
-			<TitleContainer>I already have an account</TitleContainer>
-			<TitleContainer>
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setUserCredentials({ ...userCredentials, [name]: value });
+    };
+
+    return (
+        <SignInContainer>
+            <TitleContainer>I already have an account</TitleContainer>
+            <TitleContainer>
                 Sign in with your email and password
-			</TitleContainer>
-			<form onSubmit={handleSubmit}>
-				<FormInput
-					handleChange={handleChange}
-					label='email'
-					name='email'
-					type='email'
-					value={email}
-					required
-				/>
-				<FormInput
-					handleChange={handleChange}
-					label='password'
-					name='password'
-					type='password'
-					value={password}
-					required
-				/>
-				<ButtonsContainer>
-					<CustomButton type='submit'>Sign IN</CustomButton>
-				</ButtonsContainer>
-			</form>
-		</SignInContainer>
-	);
+            </TitleContainer>
+            <form onSubmit={handleSubmit}>
+                <FormInput
+                    handleChange={handleChange}
+                    label="email"
+                    name="email"
+                    type="email"
+                    value={email}
+                    required
+                />
+                <FormInput
+                    handleChange={handleChange}
+                    label="password"
+                    name="password"
+                    type="password"
+                    value={password}
+                    required
+                />
+                <ButtonsContainer>
+                    <CustomButton type="submit">Sign IN</CustomButton>
+                </ButtonsContainer>
+            </form>
+        </SignInContainer>
+    );
 };
 
 export default SignIn;
