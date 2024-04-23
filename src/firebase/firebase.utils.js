@@ -42,13 +42,14 @@ export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (
     userAuth,
-    addintionalInformation = {}
+    addintionalInformation
 ) => {
     if (!userAuth) return;
 
     const userDocumentReference = doc(db, "users", userAuth.uid);
     const userSnapshot = await getDoc(userDocumentReference);
-    console.log("user auth: " + userAuth);
+    console.log("user auth: ", userAuth);
+    console.log("addintionalInformation", addintionalInformation);
     if (!userSnapshot.exists()) {
         const { displayName, email } = userAuth;
         const score = 0;
@@ -72,7 +73,10 @@ export const createUserDocumentFromAuth = async (
 
 export const fetchUsers = async () => {
     const querySnapshot = await getDocs(collection(db, "users"));
-    const userList = querySnapshot.docs.map((doc) => doc.data());
+    const userList = querySnapshot.docs.map((doc) => {
+        console.log(doc.id);
+        return { id: doc.id, ...doc.data() };
+    });
     return userList;
 };
 

@@ -5,6 +5,7 @@ import { fetchUsers } from "./firebase/firebase.utils";
 
 import Header from "./components/header/header.component";
 import LeaderBoard from "./components/leaderboard/leaderboard.component";
+import MyGift from "./assets/flappy-birds-gif.gif";
 
 import "./App.css";
 import { fetchUsersStart } from "./redux/user/user.actions";
@@ -15,6 +16,10 @@ function App() {
         <div className="App">
             <Header />
             <LeaderBoard />
+            <div>
+                <h2>Are you ready for the Game Challenge? Let's begin!</h2>
+                <img src={MyGift} />
+            </div>
         </div>
     );
 }

@@ -69,16 +69,23 @@ export function* isUserAuthenticated() {
     }
 }
 
-export function* signUp({ payload: { email, password, displayName } }) {
+export function* signUp({
+    payload: { email, password, displayName, phoneNumber, address },
+}) {
     try {
         const { user } = yield call(
             createAuthUserWithEmailAndPassword,
             email,
             password
         );
+        console.log(phoneNumber, address);
 
-        yield call(createUserDocumentFromAuth, user, { displayName });
-        yield put(signUpSuccess(user, { displayName }));
+        yield call(createUserDocumentFromAuth, user, {
+            displayName,
+            phoneNumber,
+            address,
+        });
+        yield put(signUpSuccess(user, { displayName, phoneNumber, address }));
     } catch (error) {
         yield put(signUpFailure(error));
     }

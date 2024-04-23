@@ -8,3 +8,15 @@ export const selectCurrentUser = createSelector(
 );
 
 export const selectUsers = createSelector([selectUser], (user) => user.users);
+
+export const selectUsersHash = createSelector(
+    [selectUser],
+    (user) => user.usersHash
+);
+
+export const selectIsFetching = createSelector(
+    [selectUser],
+    (user) => user.isFetching
+);
+
+export const selectError = createSelector([selectUser], (user) => user.error);

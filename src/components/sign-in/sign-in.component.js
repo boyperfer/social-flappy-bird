@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
-import { selectCurrentUser } from "../../redux/user/user.selectors";
+import {
+    selectCurrentUser,
+    selectError,
+} from "../../redux/user/user.selectors";
 import { emailSignInStart } from "../../redux/user/user.actions";
 import {
     SignInContainer,
@@ -17,16 +20,23 @@ const defaultFormFields = {
 };
 
 const SignIn = () => {
+    const err = useSelector(selectError);
+    const currentUser = useSelector(selectCurrentUser);
+
+    useEffect(() => {
+        if (err) {
+            alert("Login Failed");
+        }
+
+        if (currentUser) {
+            navigate("/");
+        }
+    }, [err, currentUser]);
     const [userCredentials, setUserCredentials] = useState({
         email: "",
         password: "",
     });
     const navigate = useNavigate();
-
-    const currentUser = useSelector(selectCurrentUser);
-    if (currentUser) {
-        navigate("/");
-    }
 
     const dispatch = useDispatch();
 
@@ -44,6 +54,7 @@ const SignIn = () => {
             resetFormFields();
         } catch (error) {
             console.log("user sign in failed", error);
+            alert("login failed");
         }
     };
 

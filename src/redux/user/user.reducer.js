@@ -1,8 +1,10 @@
 import UserActionTypes from "./user.types";
+import { createUsersHash } from "./users.utils";
 
 const INITIAL_STATE = {
     users: null,
-    isFetching: false,
+    usersHash: null,
+    isFetching: true,
     currentUser: null,
     error: null,
 };
@@ -38,6 +40,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 isFetching: false,
                 users: action.payload,
+                usersHash: createUsersHash(action.payload),
             };
         case UserActionTypes.FETCH_USERS_FAIL:
             return {
