@@ -5,11 +5,37 @@ import numpy as np
 import sys
 import random
 import sqlite3
+import firebase_admin
+from firebase_admin import credentials, firestore
 from button import Button
+from hashlib import sha256
+
+def pad_and_hash(input_string):
+    # Ensure the string is at least 32 characters by padding with spaces
+    padded_string = input_string[:32]  # Trim the string if it is longer than 32 characters
+    padded_string = padded_string.ljust(32)  # Pad the string to 32 characters with spaces if it's shorter
+
+    # Compute the SHA256 hash of the padded string
+    hash_digest = sha256(padded_string.encode('utf-8')).hexdigest()
+    return hash_digest
 
 # Connect to the SQLite database
 conn = sqlite3.connect('game_scores.db')
 cursor = conn.cursor()
+
+cred = credentials.Certificate('./key.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+doc_ref = db.collection('users').document('user_id')
+users_ref = db.collection('users')
+docs = users_ref.stream()
+users_by_email = {}
+for doc in docs:
+    user_data = doc.to_dict()  # Convert document to dictionary
+    email = user_data.get('email')  # Get the email address
+    if email:  # If email is present, use it as a key
+        users_by_email[email] = user_data
+
 
 # Create a table to store game scores if not exists
 cursor.execute('''CREATE TABLE IF NOT EXISTS scores (
@@ -111,6 +137,25 @@ def save_score(player_name, score):
 
 # Function to check user credentials
 def check_credentials(username, password):
+    user = users_by_email.get(username)
+    
+    # If the user doesn't exist, return False
+    if not user:
+        return False
+    
+    # Concatenate the password with the displayName
+    combined_string = password + user['displayName']
+    
+    # Hash the combined string
+    hashed_password = pad_and_hash(combined_string)
+    
+    # Compare the hashed password with the stored hashed password
+    if hashed_password == user['hashedPass']:
+        return True  # The passwords match
+    else:
+        return False  # The passwords do not match
+        
+def check_credentials1(username, password):
     cursor.execute('''SELECT * FROM users WHERE username=? AND password=?''', (username, password))
     return cursor.fetchone() is not None
 
