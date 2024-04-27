@@ -34,6 +34,7 @@ for doc in docs:
     user_data = doc.to_dict()  # Convert document to dictionary
     email = user_data.get('email')  # Get the email address
     if email:  # If email is present, use it as a key
+        user_data['id'] = doc.id
         users_by_email[email] = user_data
 
 
@@ -134,6 +135,14 @@ def save_score(player_name, score):
     cursor.execute('''INSERT INTO scores (player_name, score)
                     VALUES (?, ?)''', (player_name, score))
     conn.commit()
+
+def save_score1(user, new_score):
+    db = firestore.client()
+    user_ref = db.collection('users').document(user.get("id"))
+    user_ref.update({'score': new_score}) 
+
+save_score1(users_by_email["test1234@gmail.com"], 5)
+
 
 # Function to check user credentials
 def check_credentials(username, password):
