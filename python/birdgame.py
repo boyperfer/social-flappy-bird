@@ -139,9 +139,11 @@ def save_score(player_name, score):
 def save_score1(user, new_score):
     db = firestore.client()
     user_ref = db.collection('users').document(user.get("id"))
-    user_ref.update({'score': new_score}) 
+    current_scores = user_ref.get().to_dict().get('score', [])
+    updated_scores = current_scores + [new_score]
+    user_ref.update({'score': updated_scores})
 
-save_score1(users_by_email["test1234@gmail.com"], 5)
+save_score1(users_by_email["hoang@gmail.com"], 4)
 
 
 # Function to check user credentials
