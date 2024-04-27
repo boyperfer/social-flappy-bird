@@ -19,9 +19,6 @@ def pad_and_hash(input_string):
     hash_digest = sha256(padded_string.encode('utf-8')).hexdigest()
     return hash_digest
 
-# Connect to the SQLite database
-conn = sqlite3.connect('game_scores.db')
-cursor = conn.cursor()
 
 cred = credentials.Certificate('./key.json')
 firebase_admin.initialize_app(cred)
@@ -36,21 +33,6 @@ for doc in docs:
     if email:  # If email is present, use it as a key
         user_data['id'] = doc.id
         users_by_email[email] = user_data
-
-
-# Create a table to store game scores if not exists
-cursor.execute('''CREATE TABLE IF NOT EXISTS scores (
-                id INTEGER PRIMARY KEY,
-                player_name TEXT,
-                score INTEGER
-                )''')
-
-# Create a table to store user credentials if not exists
-cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY,
-                username TEXT UNIQUE,
-                password TEXT
-                )''')
 
 # Initialize MediaPipe Pose
 mp_pose = mp.solutions.pose
@@ -80,10 +62,10 @@ pipe_image = pg.transform.scale(pipe_image, (100, screen_height))
 pipe_list = []
 
 # Game variables
-gravity = 0.25
+gravity = 0
 bird_movement = 0
 game_active = False
-pipe_height = [200, 300, 400, 500, 600, 700, 800]
+pipe_height = [200, 300, 400, 500, 600, 700]
 SPAWNPIPE = pg.USEREVENT
 pg.time.set_timer(SPAWNPIPE, 2000)
 pipe_scroll_speed = 15
@@ -130,20 +112,14 @@ def reset_game():
     bird_rect.center = (100, 240)
     return []
 
-# Function to save score to the database
-def save_score(player_name, score):
-    cursor.execute('''INSERT INTO scores (player_name, score)
-                    VALUES (?, ?)''', (player_name, score))
-    conn.commit()
-
-def save_score1(user, new_score):
+def save_score1(username, new_score):
+    user = users_by_email.get(username)
     db = firestore.client()
     user_ref = db.collection('users').document(user.get("id"))
     current_scores = user_ref.get().to_dict().get('score', [])
     updated_scores = current_scores + [new_score]
     user_ref.update({'score': updated_scores})
 
-save_score1(users_by_email["hoang@gmail.com"], 4)
 
 
 # Function to check user credentials
@@ -161,15 +137,11 @@ def check_credentials(username, password):
     hashed_password = pad_and_hash(combined_string)
     
     # Compare the hashed password with the stored hashed password
-    if hashed_password == user['hashedPass']:
+    if hashed_password == user['hashedValue']:
         return True  # The passwords match
     else:
         return False  # The passwords do not match
         
-def check_credentials1(username, password):
-    cursor.execute('''SELECT * FROM users WHERE username=? AND password=?''', (username, password))
-    return cursor.fetchone() is not None
-
 # Function to handle login
 def handle_login():
     global game_active, player_name
@@ -217,81 +189,7 @@ def handle_login():
         text_surface = font.render(f"Enter your {typing}: {username if typing == 'username' else '*' * len(password)}", True, (255, 255, 255))
         SCREEN.blit(text_surface, (100, 100))
         pg.display.flip()
-
-
-# Function to handle signup
-def handle_signup():
-    global game_active, player_name
-    username = ""
-    password = ""
-    typing = "username"
-    font = pg.font.Font(None, 36)
-
-    while True:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_RETURN:
-                    if typing == "username":
-                        typing = "password"
-                    else:
-                        cursor.execute('''SELECT * FROM users WHERE username=?''', (username,))
-                        if cursor.fetchone() is not None:
-                            print("Username already exists. Please choose another username.")
-                            username = ""
-                            password = ""
-                            typing = "username"
-                        else:
-                            cursor.execute('''INSERT INTO users (username, password) VALUES (?, ?)''', (username, password))
-                            conn.commit()
-                            player_name = username
-                            game_active = True
-                            return
-                elif event.key == pg.K_BACKSPACE:
-                    if typing == "username":
-                        username = username[:-1]
-                    else:
-                        password = password[:-1]
-                elif event.key == pg.K_TAB:
-                    if typing == "username":
-                        typing = "password"
-                    else:
-                        typing = "username"
-                else:
-                    if typing == "username":
-                        username += event.unicode
-                    else:
-                        password += event.unicode
-
-        SCREEN.fill((0, 0, 0))
-        text_surface = font.render(f"Enter your {typing}: {username if typing == 'username' else '*' * len(password)}", True, (255, 255, 255))
-        SCREEN.blit(text_surface, (100, 100))
-        pg.display.flip()
-
-
-# Function to handle game over
-def handle_game_over():
-    global game_active
-    font = pg.font.Font(None, 100)
-    text_surface = font.render(f"Score: {score}", True, (255, 255, 255))
-    SCREEN.blit(text_surface, (screen_width // 2 - text_surface.get_width() // 2, screen_height // 2 - text_surface.get_height() // 2))
-
-    # Play Again button
-    play_again_button = pg.Rect(screen_width // 2 - 100, screen_height // 2 + 100, 200, 50)
-    pg.draw.rect(SCREEN, (0, 255, 0), play_again_button)
-    font = pg.font.Font(None, 36)
-    play_again_text = font.render("Play Again", True, (255, 255, 255))
-    SCREEN.blit(play_again_text, (screen_width // 2 - play_again_text.get_width() // 2, screen_height // 2 + 120))
-
-    # Check if user clicks the Play Again button
-    mouse_pos = pg.mouse.get_pos()
-    if event.type == pg.MOUSEBUTTONDOWN:
-        if play_again_button.collidepoint(mouse_pos):
-            # Reset game
-            game_active = True
-            reset_game()
+    
 
 # Function to create pipes
 def create_pipe():
@@ -336,15 +234,16 @@ def reset_game():
 
 def play():
     # Game variables
-    gravity = 0.25
+    gravity = 0
     bird_movement = 0
     global game_active
     global score
     global player_name
     global pipe_list
+    global pipe_scroll_speed
 
     # Main game loop
-    while cap.isOpened():
+    while True:
         ret, frame = cap.read()  # Read a frame from the camera
         if not ret:
             break
@@ -353,7 +252,7 @@ def play():
         frame = cv2.resize(frame, (screen_width, screen_height))
 
         # Process webcam feed
-        frame = cv2.cvtColor(cv2.flip(frame, 1), cv2.COLOR_BGR2RGB)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = pose.process(frame)
 
         # Convert webcam feed to Pygame surface
@@ -388,15 +287,14 @@ def play():
 
             # Update bird's position based on shoulder detection
             if results.pose_landmarks:
-                landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER]
+                landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER]
                 bird_rect.centery = int(landmark.y * screen_height)
-                bird_rect.centerx = int(landmark.x * screen_width)
+                bird_rect.centerx = int(screen_width - landmark.x * screen_width)
         else:
             # Save score to the database
-            save_score(player_name, score)
 
             # Show score
-            text_surface = get_font(75).render(f"Score: {score}", True, (255, 255, 255))
+            text_surface = get_font(75).render(f"Score: {pipe_scroll_speed * score}", True, (255, 255, 255))
             SCREEN.blit(text_surface, (screen_width // 2 - text_surface.get_width() // 2, screen_height // 2 - text_surface.get_height() // 2))
     
 
@@ -404,37 +302,36 @@ def play():
             
 
             #button for play again
-            OPTIONS_AGAIN = Button(image=None, pos=(screen_width//2, screen_height//2 + 120), 
+            PLAY_AGAIN = Button(image=None, pos=(screen_width//2, screen_height//2 + 120), 
                             text_input="PLAY AGAIN", font=get_font(35), base_color="Black", hovering_color="Green")
 
-            OPTIONS_AGAIN.changeColor(mouse_pos)
-            OPTIONS_AGAIN.update(SCREEN)
-
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit()
-                if event.type == pg.MOUSEBUTTONDOWN:
-                    if OPTIONS_AGAIN.checkForInput(mouse_pos):
-                        # Reset game
-                        game_active = True
-                        score = 0
-                        reset_game()
-
+            PLAY_AGAIN.changeColor(mouse_pos)
+            PLAY_AGAIN.update(SCREEN)
+                    
             #button for back to mainmanu
-            OPTIONS_BACK = Button(image=None, pos=(screen_width//2, screen_height//2 + 200), 
+            PLAY_BACK = Button(image=None, pos=(screen_width//2, screen_height//2 + 200), 
                             text_input="BACK", font=get_font(35), base_color="Black", hovering_color="Green")
 
-            OPTIONS_BACK.changeColor(mouse_pos)
-            OPTIONS_BACK.update(SCREEN)
+            PLAY_BACK.changeColor(mouse_pos)
+            PLAY_BACK.update(SCREEN)
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
+                    save_score1(player_name, (pipe_scroll_speed * score))
                     pg.quit()
                     sys.exit()
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    if OPTIONS_BACK.checkForInput(mouse_pos):
+                    if PLAY_BACK.checkForInput(mouse_pos):
+                        save_score1(player_name, (pipe_scroll_speed * score))
+                        score = 0
+                        reset_game()
                         main_menu()
+                    if PLAY_AGAIN.checkForInput(mouse_pos):
+                        # Reset game
+                        save_score1(player_name, (pipe_scroll_speed * score))
+                        game_active = True
+                        reset_game()
+
 
         pg.display.update()
         pg.time.Clock().tick(30)
@@ -511,5 +408,3 @@ def main_menu():
         pg.display.update()
 
 main_menu()
-# Close the database connection
-conn.close()
