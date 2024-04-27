@@ -3,8 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersStart } from "../../redux/user/user.actions";
 import {
     LeaderBoardContainer,
-    TextContainer,
+	DisplayNameContainer,
+	ScoreContainer,
+	RankContainer,
+    NumberContainer,
     UsersContainer,
+	TierContainer,
+	NameContainer,
+	TitleContainer,
+	ScoreNumberContainer,
 } from "./leaderboard.styles";
 import { selectUsers } from "../../redux/user/user.selectors";
 
@@ -20,16 +27,18 @@ const LeaderBoard = () => {
     return (
         <LeaderBoardContainer>
             <UsersContainer num={num}>
-                <TextContainer> Rank </TextContainer>
-                <TextContainer> User Name </TextContainer>
-                <TextContainer> Score </TextContainer>
+                <RankContainer> # </RankContainer>
+                <DisplayNameContainer> User Name </DisplayNameContainer>
+				<TierContainer>Tier </TierContainer>
+                <ScoreContainer> Score </ScoreContainer>
             </UsersContainer>
             {users ? (
                 users.map(({ displayName, score }, i) => (
                     <UsersContainer num={i}>
-                        <TextContainer>{i + 1}</TextContainer>
-                        <TextContainer>{displayName}</TextContainer>
-                        <TextContainer>{score}</TextContainer>
+                        <NumberContainer>{i + 1}</NumberContainer>
+                        <NameContainer>{displayName}</NameContainer>
+						<TitleContainer>Challenger</TitleContainer>
+                        <ScoreNumberContainer>{Math.max(...score)}</ScoreNumberContainer>
                     </UsersContainer>
                 ))
             ) : (

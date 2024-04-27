@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
+
 export const HeaderContainer = styled.div`
-    height: 70px;
+	background-color: #1c1c1f;
     width: 100%;
+	height: 100px;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 25px;
 	color: black;
 	position: fixed;
 	top: 0;
@@ -17,7 +18,7 @@ export const LinkContainer = styled(Link)`
     height: 100%;
     width: 70px;
     padding: 25px;
-	color: black;
+	color: #adb5bd;
 `
 
 export const OptionsContainer = styled.div`
@@ -26,10 +27,10 @@ export const OptionsContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-end;
-	color: black;
+	color: #adb5bd;
 `
 
 export const OptionLink = styled(Link)`
     padding: 10px 15px;
-	color: black;
+	color:  #adb5bd;
 `

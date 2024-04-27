@@ -52,7 +52,8 @@ export const createUserDocumentFromAuth = async (
     console.log("addintionalInformation", addintionalInformation);
     if (!userSnapshot.exists()) {
         const { displayName, email } = userAuth;
-        const score = 0;
+        const score = [];
+		score.push(0);
         console.log("user auth: ", userAuth);
         const createdAt = new Date();
         try {

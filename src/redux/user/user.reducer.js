@@ -36,11 +36,16 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 isFetching: true,
             };
         case UserActionTypes.FETCH_USERS_SUCCESS:
+			const sortedUsers = [...action.payload].sort((a, b) => {
+				const maxScoreA = a.score && Array.isArray(a.score) ? Math.max(...a.score) : 0;
+				const maxScoreB = b.score && Array.isArray(b.score) ? Math.max(...b.score) : 0;
+				return maxScoreB - maxScoreA;
+			});
             return {
                 ...state,
                 isFetching: false,
-                users: action.payload,
-                usersHash: createUsersHash(action.payload),
+                users: sortedUsers, 
+                usersHash: createUsersHash(sortedUsers),
             };
         case UserActionTypes.FETCH_USERS_FAIL:
             return {
