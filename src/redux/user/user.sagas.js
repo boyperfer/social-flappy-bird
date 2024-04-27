@@ -1,6 +1,7 @@
 import { takeLatest, put, all, call } from "redux-saga/effects";
 
 import UserActionTypes from "./user.types";
+import { padAndHash } from "./users.utils";
 
 import {
     signInSuccess,
@@ -70,7 +71,7 @@ export function* isUserAuthenticated() {
 }
 
 export function* signUp({
-    payload: { email, password, displayName, phoneNumber, address },
+    payload: { email, password, displayName, gender, age, height, weight, experience},
 }) {
     try {
         const { user } = yield call(
@@ -78,14 +79,19 @@ export function* signUp({
             email,
             password
         );
-        console.log(phoneNumber, address);
+		const passAndname = password + displayName;
+		const hashedValue = yield call(padAndHash, passAndname);
 
         yield call(createUserDocumentFromAuth, user, {
             displayName,
-            phoneNumber,
-            address,
+			hashedValue,
+			gender,
+			age,
+			height,
+			weight,
+			experience
         });
-        yield put(signUpSuccess(user, { displayName, phoneNumber, address }));
+        yield put(signUpSuccess(user, { displayName, gender, age, height, weight, experience}));
     } catch (error) {
         yield put(signUpFailure(error));
     }

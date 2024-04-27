@@ -76,6 +76,26 @@ export const ScoreContainer = styled.div`
 	width: 10%;
 `
 
+export const ExperienceContainer = styled.div`
+	position: relative;
+	height: 32px;
+	user-select: none;
+	background: #282831; 
+	color: #adb5bd; 
+	font-size: 14px;
+	line-height: 16px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	white-space: nowrap;
+	border-color: var(--gray200);
+	box-sizing: border-box;
+	font-weight: bold;
+	vertical-align: middle;
+	padding: 4px;
+	padding-left: 20px;
+	width: 15%;
+`
+
 export const DisplayNameContainer = styled.div`
 	position: relative;
 	height: 32px;
@@ -93,7 +113,7 @@ export const DisplayNameContainer = styled.div`
 	vertical-align: middle;
 	padding: 4px;
 	padding-left: 20px;
-	width: 70%;
+	width: 30%;
 `
 
 export const UsersContainer = styled.div`
@@ -129,7 +149,7 @@ export const NameContainer= styled.div`
 	border-bottom-style: solid;
 	border-color: var(--gray200);
     font-size: 20px;
-    width: 70%;
+    width: 30%;
     font-weight: bold;
     color: #adb5bd;
 	font-size: 12px;
@@ -151,7 +171,7 @@ export const TitleContainer= styled.div`
 	border-bottom-style: solid;
 	border-color: var(--gray200);
     font-size: 20px;
-    width: 15%;
+    width: 10%;
     font-weight: bold;
     color: #adb5bd;
 	font-size: 12px;
@@ -163,9 +183,33 @@ export const TitleContainer= styled.div`
 	font-family: "Roboto", sans-serif;
 	box-sizing: border-box;
 	padding: 4px;
+	padding-left: 15px;
 	height: 40px;
 	border-color: black;
 `;
+
+export const ExperienceNumberContainer= styled.div`
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-color: var(--gray200);
+    font-size: 20px;
+    width: 15%;
+    font-weight: bold;
+    color: #adb5bd;
+	font-size: 14px;
+	line-height: 16px;
+	text-align: left !important;
+	font-weight: normal;
+	white-space: nowrap;
+	background: #31313c; 
+	font-family: "Roboto", sans-serif;
+	box-sizing: border-box;
+	padding: 4px;
+	padding-left: 20px;
+	height: 40px;
+	border-color: black;
+
+`
 export const ScoreNumberContainer = styled.div`
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
@@ -183,7 +227,7 @@ export const ScoreNumberContainer = styled.div`
 	font-family: "Roboto", sans-serif;
 	box-sizing: border-box;
 	padding: 4px;
-	padding-left: 30px;
+	padding-left: 20px;
 	height: 40px;
 	border-color: black;
 

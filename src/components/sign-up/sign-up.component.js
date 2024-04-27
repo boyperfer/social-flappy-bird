@@ -10,8 +10,11 @@ const defaultFormFields = {
     email: "",
     password: "",
     confirmPassword: "",
-    phoneNumber: "",
-    address: "",
+	gender: "",
+	age: "", 
+	height: "", 
+	weight: "", 
+	experience: "", 
 };
 
 const SignUp = () => {
@@ -20,8 +23,11 @@ const SignUp = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        phoneNumber: "",
-        address: "",
+		gender: "",
+		age: "",
+		height: "", 
+		weight:"", 
+		experience: "", 
     });
 
     const resetFormFields = () => {
@@ -33,8 +39,11 @@ const SignUp = () => {
         email,
         password,
         confirmPassword,
-        phoneNumber,
-        address,
+		gender,
+		age,
+		height,
+		weight,
+		experience,
     } = userCredentials;
     const dispatch = useDispatch();
 
@@ -46,10 +55,20 @@ const SignUp = () => {
             alert("passwords do not match");
             return;
         }
+		
+		if (gender !== "M" && gender !== "F") {
+            alert("Please enter a valid gender, M for male and F for female");
+            return;
+		}
+
+		if (!(parseFloat(height) >  0)) {
+            alert("Please enter a valid height in feet")
+			return;
+		}
 
         try {
             dispatch(
-                signUpStart(email, password, displayName, phoneNumber, address)
+                signUpStart(email, password, displayName, gender, age, height, weight, experience)
             );
             resetFormFields();
         } catch (error) {
@@ -94,7 +113,7 @@ const SignUp = () => {
                     name="password"
                     value={password}
                     onChange={handleChange}
-                    label="password"
+                    label="Password"
                     required
                 />
                 <FormInput
@@ -107,18 +126,42 @@ const SignUp = () => {
                 />
                 <FormInput
                     type="text"
-                    name="phoneNumber"
-                    value={phoneNumber}
+                    name="gender"
+                    value={gender}
                     onChange={handleChange}
-                    label="Phone Number"
+                    label="Gender"
                     required
                 />
                 <FormInput
-                    type="text"
-                    name="address"
-                    value={address}
+                    type="number"
+                    name="age"
+                    value={age}
                     onChange={handleChange}
-                    label="Address"
+                    label="Age"
+                    required
+                />
+                <FormInput
+                    type="number"
+                    name="height"
+                    value={height}
+                    onChange={handleChange}
+                    label="Height"
+                    required
+                />
+                <FormInput
+                    type="number"
+                    name="weight"
+                    value={weight}
+                    onChange={handleChange}
+                    label="Weight"
+                    required
+                />
+                <FormInput
+                    type="number"
+                    name="experience"
+                    value={experience}
+                    onChange={handleChange}
+                    label="Experience"
                     required
                 />
                 <CustomButton type="submit">SIGN UP</CustomButton>

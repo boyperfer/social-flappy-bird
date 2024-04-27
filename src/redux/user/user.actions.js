@@ -41,11 +41,14 @@ export const signUpStart = (
     email,
     password,
     displayName,
-    phoneNumber,
-    address
+    gender,
+	age,
+	height,
+	weight,
+	experience
 ) => ({
     type: UserActionTypes.SIGN_UP_START,
-    payload: { email, password, displayName, phoneNumber, address },
+    payload: { email, password, displayName, gender, age, height, weight, experience},
 });
 
 export const signUpSuccess = (user, additionalData) => ({
