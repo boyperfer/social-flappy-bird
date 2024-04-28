@@ -5,9 +5,23 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Set a basic font size and color */
+  font-size: 16px;
+  color: #333;
+
+  background-image: url('./assets/flappy-birds-gif.gif');
+  background-size: cover; /* Ensure the background image covers the entire container */
+  background-repeat: no-repeat; /* Prevent the background image from repeating */
+  background-position: center; /* Center the background image */
+  height: 100vh;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+  /* Code block styling remains the same */
+  font-size: 14px;
+  background-color: #f70000;
+  padding: 5px;
+  border-radius: 3px;
 }
