@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FormInput from "../form-input/form-input.component";
-import CustomButton from "../custom-button/custom-button.component";
-import {
-    selectCurrentUser,
-    selectError,
-} from "../../redux/user/user.selectors";
 import { emailSignInStart } from "../../redux/user/user.actions";
-import {
-    SignInContainer,
-    TitleContainer,
-    ButtonsContainer,
-} from "./sign-in.styles";
+import { selectCurrentUser, selectError } from "../../redux/user/user.selectors";
+import CustomButton from "../custom-button/custom-button.component";
+import FormInput from "../form-input/form-input.component";
+import { ButtonsContainer, SignInContainer, TitleContainer } from "./sign-in.styles";
 
 const defaultFormFields = {
     email: "",
@@ -32,12 +25,9 @@ const SignIn = () => {
             navigate("/");
         }
     }, [err, currentUser]);
-    const [userCredentials, setUserCredentials] = useState({
-        email: "",
-        password: "",
-    });
-    const navigate = useNavigate();
 
+    const [userCredentials, setUserCredentials] = useState(defaultFormFields);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const { email, password } = userCredentials;
@@ -65,10 +55,8 @@ const SignIn = () => {
 
     return (
         <SignInContainer>
-            <TitleContainer>I already have an account</TitleContainer>
-            <TitleContainer>
-                Sign in with your email and password
-            </TitleContainer>
+            <TitleContainer><center>I already have an account</center></TitleContainer>
+            <TitleContainer><center>Sign in</center></TitleContainer>
             <form onSubmit={handleSubmit}>
                 <FormInput
                     handleChange={handleChange}
