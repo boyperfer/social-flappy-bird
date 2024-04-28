@@ -1,7 +1,12 @@
 .App {
-	text-align: left;
-	background-color: #1c1c1f;
-	height: 100vh; 
+  text-align: center;
+}
+.App {
+  background-image: url('./assets/flappy-birds-gif.gif');
+  background-size: cover; /* Ensure the background image covers the entire container */
+  background-repeat: no-repeat; /* Prevent the background image from repeating */
+  background-position: center; /* Center the background image */
+  height: 100vh;
 }
 
 .App-logo {
@@ -16,7 +21,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #0c57ee;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
