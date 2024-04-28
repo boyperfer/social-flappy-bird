@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {  
+import {
     GroupContainer,
     FormInputContainer,
     FromInputLabel
