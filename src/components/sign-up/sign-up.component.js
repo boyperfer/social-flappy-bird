@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signUpStart } from "../../redux/user/user.actions";
-import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
+import FormInput from "../form-input/form-input.component";
 import { SignUpContainer, TitleContainer } from "./sign-up.styles";
 
 const defaultFormFields = {
@@ -10,11 +10,11 @@ const defaultFormFields = {
     email: "",
     password: "",
     confirmPassword: "",
-	gender: "",
-	age: "", 
-	height: "", 
-	weight: "", 
-	experience: "", 
+    gender: "",
+	age: "",
+	height: "",
+	weight: "",
+	experience: "",
 };
 
 const SignUp = () => {
@@ -23,11 +23,6 @@ const SignUp = () => {
         email: "",
         password: "",
         confirmPassword: "",
-		gender: "",
-		age: "",
-		height: "", 
-		weight:"", 
-		experience: "", 
     });
 
     const resetFormFields = () => {
@@ -39,11 +34,6 @@ const SignUp = () => {
         email,
         password,
         confirmPassword,
-		gender,
-		age,
-		height,
-		weight,
-		experience,
     } = userCredentials;
     const dispatch = useDispatch();
 
@@ -55,20 +45,10 @@ const SignUp = () => {
             alert("passwords do not match");
             return;
         }
-		
-		if (gender !== "M" && gender !== "F") {
-            alert("Please enter a valid gender, M for male and F for female");
-            return;
-		}
-
-		if (!(parseFloat(height) >  0)) {
-            alert("Please enter a valid height in feet")
-			return;
-		}
 
         try {
             dispatch(
-                signUpStart(email, password, displayName, gender, age, height, weight, experience)
+                signUpStart(email, password, displayName)
             );
             resetFormFields();
         } catch (error) {
@@ -113,7 +93,7 @@ const SignUp = () => {
                     name="password"
                     value={password}
                     onChange={handleChange}
-                    label="Password"
+                    label="password"
                     required
                 />
                 <FormInput
@@ -122,46 +102,6 @@ const SignUp = () => {
                     value={confirmPassword}
                     onChange={handleChange}
                     label="Confirm password"
-                    required
-                />
-                <FormInput
-                    type="text"
-                    name="gender"
-                    value={gender}
-                    onChange={handleChange}
-                    label="Gender"
-                    required
-                />
-                <FormInput
-                    type="number"
-                    name="age"
-                    value={age}
-                    onChange={handleChange}
-                    label="Age"
-                    required
-                />
-                <FormInput
-                    type="number"
-                    name="height"
-                    value={height}
-                    onChange={handleChange}
-                    label="Height"
-                    required
-                />
-                <FormInput
-                    type="number"
-                    name="weight"
-                    value={weight}
-                    onChange={handleChange}
-                    label="Weight"
-                    required
-                />
-                <FormInput
-                    type="number"
-                    name="experience"
-                    value={experience}
-                    onChange={handleChange}
-                    label="Experience"
                     required
                 />
                 <CustomButton type="submit">SIGN UP</CustomButton>
