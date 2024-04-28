@@ -2,13 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./index.css";
 import App from "./App";
+import "./index.css";
 import LoginPage from "./pages/login/login.page";
 import ProfilePage from "./pages/profile/profile.component";
-import reportWebVitals from "./reportWebVitals";
-import store from "./redux/store";
 import SharePage from "./pages/share/share.page";
+import store from "./redux/store";
+import reportWebVitals from "./reportWebVitals";
 
 const router = createBrowserRouter([
     {
