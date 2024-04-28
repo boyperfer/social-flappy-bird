@@ -12,8 +12,6 @@ import {
 	NameContainer,
 	TitleContainer,
 	ScoreNumberContainer,
-	ExperienceContainer,
-	ExperienceNumberContainer,
 } from "./leaderboard.styles";
 import { selectUsers } from "../../redux/user/user.selectors";
 
@@ -31,24 +29,16 @@ const LeaderBoard = () => {
             <UsersContainer num={num}>
                 <RankContainer> # </RankContainer>
                 <DisplayNameContainer> User Name </DisplayNameContainer>
+				<TierContainer>Tier </TierContainer>
                 <ScoreContainer> Score </ScoreContainer>
-                <ScoreContainer> Gender </ScoreContainer>
-                <ScoreContainer> Age </ScoreContainer>
-                <ScoreContainer> Height </ScoreContainer>
-                <ScoreContainer> Weight </ScoreContainer>
-                <ExperienceContainer> Experience </ExperienceContainer>
             </UsersContainer>
             {users ? (
-                users.map(({ displayName, score, age, gender, height, weight, experience }, i) => (
+                users.map(({ displayName, score }, i) => (
                     <UsersContainer num={i}>
                         <NumberContainer>{i + 1}</NumberContainer>
                         <NameContainer>{displayName}</NameContainer>
+						<TitleContainer>Challenger</TitleContainer>
                         <ScoreNumberContainer>{Math.max(...score)}</ScoreNumberContainer>
-						<TitleContainer>{gender}</TitleContainer>
-						<TitleContainer>{age}</TitleContainer>
-						<TitleContainer>{height}</TitleContainer>
-						<TitleContainer>{weight}</TitleContainer>
-						<ExperienceNumberContainer>{experience}</ExperienceNumberContainer>
                     </UsersContainer>
                 ))
             ) : (
