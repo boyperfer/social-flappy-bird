@@ -1,18 +1,18 @@
 import { useSelector } from "react-redux";
-import { FacebookShareButton, FacebookIcon } from "react-share";
+import { FacebookIcon, FacebookShareButton } from "react-share";
 import Header from "../../components/header/header.component";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import {
     ProfileContainer,
-    ProfileHeader,
     ProfileContent,
-    UserDetail,
+    ProfileHeader,
     TextContainer,
+    UserDetail,
 } from "./users.styles";
 
 const Users = () => {
     const currentUser = useSelector(selectCurrentUser);
-    const { displayName, phoneNumber, address, score, email, id } = currentUser;
+    const { displayName, score, email, id } = currentUser;
     const url = `https://gamedemo123.netlify.app/share/${id}`;
     console.log(url);
     return currentUser ? (
@@ -28,12 +28,6 @@ const Users = () => {
                     </TextContainer>
                     <TextContainer>
                         <strong>Email:</strong> {email}
-                    </TextContainer>
-                    <TextContainer>
-                        <strong>Phone Number:</strong> {phoneNumber}
-                    </TextContainer>
-                    <TextContainer>
-                        <strong>Address:</strong> {address}
                     </TextContainer>
                     <TextContainer>
                         <strong>Score:</strong> {score}
