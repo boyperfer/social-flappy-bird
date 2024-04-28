@@ -1,11 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-
-import { selectCurrentUser } from "../../redux/user/user.selectors";
-
 import { signOutStart } from "../../redux/user/user.actions";
-
-import { HeaderContainer, OptionsContainer, OptionLink } from "./header.styles";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { HeaderContainer, OptionLink, OptionsContainer } from "./header.styles";
 
 const Header = () => {
     const currentUser = useSelector(selectCurrentUser);
@@ -17,15 +14,14 @@ const Header = () => {
             <OptionsContainer>
                 <OptionLink to="/">HOME</OptionLink>
                 <OptionLink to="/profile">PROFILE</OptionLink>
+                {/* Update the link to "/leaderboard" */}
+                <OptionLink to="/leaderboard">SCOREBOARD</OptionLink>
                 {currentUser ? (
-                    /* if the user logged in, display "SIGN OUT", otherwise "SIGN IN" */
                     <OptionLink onClick={() => dispatch(signOutStart())}>
                         SIGN OUT
                     </OptionLink>
                 ) : (
-                    <div>
-                        <OptionLink to="/login">{signIn}</OptionLink>
-                    </div>
+                    <OptionLink to="/login">{signIn}</OptionLink>
                 )}
             </OptionsContainer>
         </HeaderContainer>
