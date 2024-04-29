@@ -6,6 +6,7 @@ import sys
 import random
 import sqlite3
 import firebase_admin
+import webbrowser
 from firebase_admin import credentials, firestore
 from button import Button
 from hashlib import sha256
@@ -66,11 +67,11 @@ gravity = 0
 bird_movement = 0
 game_active = False
 pipe_height = [200, 300, 400, 500, 600, 700]
-SPAWNPIPE = pg.USEREVENT
-pg.time.set_timer(SPAWNPIPE, 2000)
+pipe_freq = 2000
 pipe_scroll_speed = 15
 score = 0
 player_name = None
+part = 2
 
 # Initialize webcam
 cap = cv2.VideoCapture(0)
@@ -220,16 +221,17 @@ def check_collision(pipes):
     for pipe in pipes:
         if bird_rect.colliderect(pipe):
             game_active = False
-    if bird_rect.top <= -100 or bird_rect.bottom >= screen_height:
-        game_active = False
+    # if bird_rect.top <= -100 or bird_rect.bottom >= screen_height:
+    #     game_active = False
 
 # Function to reset the game
 def reset_game():
-    global score, bird_movement, pipe_list
+    global score, bird_movement, pipe_list, game_active
     bird_rect.center = (100, 240)
     score = 0
     bird_movement = 0
     pipe_list = []
+    game_active = True
 
 
 def play():
@@ -241,6 +243,11 @@ def play():
     global player_name
     global pipe_list
     global pipe_scroll_speed
+    global pipe_freq
+    global part
+
+    SPAWNPIPE = pg.USEREVENT
+    pg.time.set_timer(SPAWNPIPE, pipe_freq)
 
     # Main game loop
     while True:
@@ -272,7 +279,6 @@ def play():
         SCREEN.blit(frame_surface, (0, 0))
 
 
-
         if game_active:
             # Bird
             bird_movement += gravity
@@ -285,9 +291,15 @@ def play():
 
             check_collision(pipe_list)
 
+            text_surface = get_font(25).render(f"Score: {pipe_scroll_speed * score}", True, (255, 255, 255))
+            SCREEN.blit(text_surface, (20, 20))
+
             # Update bird's position based on shoulder detection
             if results.pose_landmarks:
-                landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER]
+                if part == 1:
+                    landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HEEL]
+                if part == 2:
+                    landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER]
                 bird_rect.centery = int(landmark.y * screen_height)
                 bird_rect.centerx = int(screen_width - landmark.x * screen_width)
         else:
@@ -334,21 +346,63 @@ def play():
 
 
         pg.display.update()
-        pg.time.Clock().tick(30)
+        
 
 def options():
+    global pipe_scroll_speed
+    global pipe_freq
+    global part
+
     while True:
         OPTIONS_MOUSE_POS = pg.mouse.get_pos()
 
         SCREEN.fill("white")
 
-        OPTIONS_TEXT = get_font(45).render("This is the OPTIONS screen.", True, "Black")
-        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
+        OPTIONS_TEXT = get_font(45).render("EXERCISE TYPE", True, "Black")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 160))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
-        OPTIONS_BACK = Button(image=None, pos=(640, 460), 
-                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
+        
+        OPTIONS_TEXT = get_font(45).render("BIRD SPEED", True, "Black")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 420))
+        SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
+
+        OPTIONS_LEG = Button(image=None, pos=(440, 260), 
+                            text_input="LEG RAISE", font=get_font(35), base_color="Black", hovering_color="Green")
+        OPTIONS_LEG.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_LEG.update(SCREEN)
+
+
+        OPTIONS_SHO = Button(image=None, pos=(840, 260), 
+                            text_input="PUSH UP", font=get_font(35), base_color="Black", hovering_color="Green")
+        OPTIONS_SHO.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_SHO.update(SCREEN)
+
+
+        text_surface = get_font(20).render(f"Speed: {pipe_scroll_speed}", True, "Black")
+        SCREEN.blit(text_surface, (20, 20))
+        if part == 1:
+            text_surface = get_font(20).render(f"Exercise: Leg Raise", True, "Black")
+        if part == 2:
+            text_surface = get_font(20).render(f"Exercise: Push Up", True, "Black")
+        SCREEN.blit(text_surface, (20, 40))
+
+
+        OPTIONS_DEC = Button(image=None, pos=(440, 520), 
+                            text_input="DOWN", font=get_font(35), base_color="Black", hovering_color="Green")
+        OPTIONS_DEC.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_DEC.update(SCREEN)
+
+
+        OPTIONS_INC = Button(image=None, pos=(840, 520), 
+                            text_input="UP", font=get_font(35), base_color="Black", hovering_color="Green")
+        OPTIONS_INC.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_INC.update(SCREEN)
+
+
+        OPTIONS_BACK = Button(image=None, pos=(640, 660), 
+                            text_input="BACK", font=get_font(55), base_color="Black", hovering_color="Green")
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
 
@@ -357,12 +411,23 @@ def options():
                 pg.quit()
                 sys.exit()
             if event.type == pg.MOUSEBUTTONDOWN:
+                if OPTIONS_LEG.checkForInput(OPTIONS_MOUSE_POS):
+                    part = 1
+                if OPTIONS_SHO.checkForInput(OPTIONS_MOUSE_POS):
+                    part = 2
+                if OPTIONS_DEC.checkForInput(OPTIONS_MOUSE_POS):
+                    pipe_scroll_speed = pipe_scroll_speed - 1
+                    pipe_freq = int(30000/pipe_scroll_speed)
+                if OPTIONS_INC.checkForInput(OPTIONS_MOUSE_POS):
+                    pipe_scroll_speed = pipe_scroll_speed + 1
+                    pipe_freq = int(30000/pipe_scroll_speed)
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
 
         pg.display.update()
 
 def main_menu():
+    global player_name
     while True:
         SCREEN.blit(BG, (0, 0))
 
@@ -393,14 +458,16 @@ def main_menu():
                 pg.quit()
                 sys.exit()
             if event.type == pg.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS) and player_name != None:
                     play()
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS) and player_name == None:
+                    print("login first")
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options()
                 if LOGIN_BUTTON.checkForInput(MENU_MOUSE_POS):
                     handle_login()
                 if SIGNIN_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    handle_signup()
+                    webbrowser.open("https://gamedemo123.netlify.app/login")
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pg.quit()
                     sys.exit()
