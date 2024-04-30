@@ -16,7 +16,6 @@ Users can select specific body parts such as head, shoulders, elbows, knees, and
 https://gamedemo123.netlify.app/
 
 ### How to Install
-## make sure conda is ready
 # Create Account, Check Leaderboard
 ./install.sh or (https://gamedemo123.netlify.app/)
 
