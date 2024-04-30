@@ -16,13 +16,12 @@ Users can select specific body parts such as head, shoulders, elbows, knees, and
 https://gamedemo123.netlify.app/
 
 ### How to Install
-conda create -n {virtual_env_name} python=3.11.2
-conda activate {virtual_env_name}
+## make sure conda is ready
+# Create Account, Check Leaderboard
+./install.sh or (https://gamedemo123.netlify.app/)
 
-git clone https://github.com/boyperfer/social-flappy-bird.git
-cd social-flappy-bird
-npm install
-npm start
+# Sign in with created account and Play Game
+./playgame.sh
 
 ### Demo Run
 ```git checkout test```
