@@ -148,7 +148,7 @@ def handle_login():
     global game_active, player_name
     username = ""
     password = ""
-    typing = "username"
+    typing = "User Email"
     font = pg.font.Font(None, 36)
 
     while True:
@@ -158,8 +158,8 @@ def handle_login():
                 sys.exit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:
-                    if typing == "username":
-                        typing = "password"
+                    if typing == "User Email":
+                        typing = "Password"
                     else:
                         if check_credentials(username, password):
                             player_name = username
@@ -169,25 +169,25 @@ def handle_login():
                             print("Invalid credentials. Please try again.")
                             username = ""
                             password = ""
-                            typing = "username"
+                            typing = "User Email"
                 elif event.key == pg.K_BACKSPACE:
-                    if typing == "username":
+                    if typing == "User Email":
                         username = username[:-1]
                     else:
                         password = password[:-1]
                 elif event.key == pg.K_TAB:
-                    if typing == "username":
-                        typing = "password"
+                    if typing == "User Email":
+                        typing = "Password"
                     else:
-                        typing = "username"
+                        typing = "User Email"
                 else:
-                    if typing == "username":
+                    if typing == "User Email":
                         username += event.unicode
                     else:
                         password += event.unicode
 
         SCREEN.fill((0, 0, 0))
-        text_surface = font.render(f"Enter your {typing}: {username if typing == 'username' else '*' * len(password)}", True, (255, 255, 255))
+        text_surface = font.render(f"Enter your {typing}: {username if typing == 'User Email' else '*' * len(password)}", True, (255, 255, 255))
         SCREEN.blit(text_surface, (100, 100))
         pg.display.flip()
     
@@ -443,9 +443,9 @@ def main_menu():
         QUIT_BUTTON = Button(image=None, pos=(640, 500), 
                             text_input="QUIT", font=get_font(55), base_color="#d7fcd4", hovering_color="White")
         LOGIN_BUTTON = Button(image=None, pos=(440, 625), 
-                            text_input="LOGIN", font=get_font(45), base_color="#d7fcd4", hovering_color="White")
-        SIGNIN_BUTTON = Button(image=None, pos=(840, 625), 
                             text_input="SIGNIN", font=get_font(45), base_color="#d7fcd4", hovering_color="White")
+        SIGNIN_BUTTON = Button(image=None, pos=(840, 625), 
+                            text_input="SIGNUP", font=get_font(45), base_color="#d7fcd4", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
 
