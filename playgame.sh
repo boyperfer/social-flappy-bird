@@ -2,7 +2,7 @@
 
 # play game
 echo "install virtual environment"
-python -m venv venv
+python -m venv social-flappy-bird
 source venv/bin/activate
 
 echo "Install python packages"
