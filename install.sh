@@ -6,7 +6,6 @@
 # conda activate social-flappy-bird
 
 echo "Install python packages"
-cd soical-flappy-bird
 npm install  
 
 echo "Start social-flappy-bird"
