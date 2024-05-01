@@ -1,12 +1,12 @@
 import styled, { css } from 'styled-components'
 
-const subColor = 'grey';
+const subColor = '#adb5bd';
 const mainColor = 'black';
 
 const shrinkLabel = css`
     top: -14px;
     font-size: 12px;
-    color: ${mainColor};
+    color: ${subColor};
 `
 
 export const GroupContainer = styled.div`

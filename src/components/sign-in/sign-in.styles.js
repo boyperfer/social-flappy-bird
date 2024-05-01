@@ -4,7 +4,6 @@ export const SignInContainer = styled.div`
     width: 380px;
     display: flex;
     flex-direction: column;
-	color: #adb5bd;
 `
 
 export const TitleContainer = styled.span`

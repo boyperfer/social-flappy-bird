@@ -12,15 +12,12 @@ import {
 
 const Users = () => {
     const currentUser = useSelector(selectCurrentUser);
-    const { displayName, phoneNumber, address, score, email, id } = currentUser;
+    const { displayName, gender, age, height, weight, experience, id, score, email } = currentUser;
     const url = `https://gamedemo123.netlify.app/share/${id}`;
     console.log(url);
     return currentUser ? (
         <ProfileContainer>
             <Header />
-            <ProfileHeader>
-                <h1>User Profile</h1>
-            </ProfileHeader>
             <ProfileContent>
                 <UserDetail>
                     <TextContainer>
@@ -30,13 +27,22 @@ const Users = () => {
                         <strong>Email:</strong> {email}
                     </TextContainer>
                     <TextContainer>
-                        <strong>Phone Number:</strong> {phoneNumber}
+                        <strong>Gender:</strong> {gender}
                     </TextContainer>
                     <TextContainer>
-                        <strong>Address:</strong> {address}
+                        <strong>Age:</strong> {age}
                     </TextContainer>
                     <TextContainer>
-                        <strong>Score:</strong> {score}
+                        <strong>Height:</strong> {height}
+                    </TextContainer>
+                    <TextContainer>
+                        <strong>Weight:</strong> {weight}
+                    </TextContainer>
+                    <TextContainer>
+                        <strong>Experience:</strong> {experience}
+                    </TextContainer>
+                    <TextContainer>
+                        <strong>Highest score:</strong> {Math.max(...score)}
                     </TextContainer>
                     <FacebookShareButton
                         url={url}

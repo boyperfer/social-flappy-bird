@@ -1158,6 +1158,16 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@canvasjs/charts@^3.8.4":
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/@canvasjs/charts/-/charts-3.8.4.tgz#6a27c163333ea5b5c7a615b2f56803f5c1998312"
+  integrity sha512-fz/PzDFfLNICsiQkz/V/tllFxWKhQjpzDqtjAEHX4Sbdva361T86wMLay1cp7/5p1LAVwXd13FrRaGiyKRi+4A==
+
+"@canvasjs/react-charts@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@canvasjs/react-charts/-/react-charts-1.0.2.tgz#56b1fa72018522240ce03106426f4ee57959112f"
+  integrity sha512-PZgJlDbGdMF4AN/KvrvGY9X50EByJMZ7MHfQB/U0aky9Onn9mt0CpsvwudBsBe+DofaV3SHR4SHn/Wfo/pubDw==
+
 "@csstools/normalize.css@*":
   version "12.1.1"
   resolved "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-12.1.1.tgz"
