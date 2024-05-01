@@ -3,7 +3,7 @@
 # play game
 echo "install virtual environment"
 python -m venv social-flappy-bird
-source venv/bin/activate
+source social-flappy-bird/bin/activate
 
 echo "Install python packages"
 pip install -r requirements.txt
